@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Kaushik Cricket AI System</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background-color: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #38bdf8;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: none;
+            background-color: #334155;
+            color: white;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #38bdf8;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #475569;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        #aiReport {
+            white-space: pre-line;
+            line-height: 1.8;
+        }
+
+        .deleteBtn {
+            background-color: #ef4444;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏏 Kaushik Cricket Intelligence System</h1>
+
+    <p>
+        Athlete • Analyst • AI Performance Tracking Platform
+    </p>
+
+    <div class="card">
+
+        <h2>Enter Match Performance</h2>
+
+        <input type="text" id="opponent" placeholder="Opponent Team">
+
+        <input type="number" id="overs" placeholder="Overs Bowled">
+
+        <input type="number" id="runs" placeholder="Runs Conceded">
+
+        <input type="number" id="wickets" placeholder="Wickets Taken">
+
+        <input type="number" id="batting" placeholder="Batting Runs">
+
+        <input type="number" id="catches" placeholder="Catches">
+
+        <textarea id="notes" placeholder="Match Notes / Pressure Situations"></textarea>
+
+        <button onclick="saveMatch()">
+            Save Match To Database
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📊 Match Database</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Opponent</th>
+                    <th>Overs</th>
+                    <th>Runs</th>
+                    <th>Wickets</th>
+                    <th>Batting</th>
+                    <th>Catches</th>
+                    <th>Delete</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="matchTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="card">
+
+        <h2>🤖 Kaushik AI Agent</h2>
+
+        <button onclick="runAI()">
+            Analyze My Performance
+        </button>
+
+        <div id="aiReport">
+
+            AI analysis will appear here...
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let matches = JSON.parse(localStorage.getItem("kaushikMatches")) || [];
+
+    function displayMatches() {
+
+        let table = document.getElementById("matchTable");
+
+        table.innerHTML = "";
+
+        matches.forEach((match, index) => {
+
+            table.innerHTML += `
+
+            <tr>
+                <td>${match.opponent}</td>
+                <td>${match.overs}</td>
+                <td>${match.runs}</td>
+                <td>${match.wickets}</td>
+                <td>${match.batting}</td>
+                <td>${match.catches}</td>
+
+                <td>
+                    <button class="deleteBtn"
+                    onclick="deleteMatch(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+
+            `;
+
+        });
+
+    }
+
+    function saveMatch() {
+
+        let match = {
+
+            opponent: document.getElementById("opponent").value,
+
+            overs: parseFloat(document.getElementById("overs").value),
+
+            runs: parseFloat(document.getElementById("runs").value),
+
+            wickets: parseFloat(document.getElementById("wickets").value),
+
+            batting: parseFloat(document.getElementById("batting").value),
+
+            catches: parseFloat(document.getElementById("catches").value),
+
+            notes: document.getElementById("notes").value
+
+        };
+
+        matches.push(match);
+
+        localStorage.setItem(
+            "kaushikMatches",
+            JSON.stringify(matches)
+        );
+
+        displayMatches();
+
+        alert("Match Saved Successfully!");
+
+    }
+
+    function deleteMatch(index) {
+
+        matches.splice(index, 1);
+
+        localStorage.setItem(
+            "kaushikMatches",
+            JSON.stringify(matches)
+        );
+
+        displayMatches();
+
+    }
+
+    function runAI() {
+
+        if(matches.length === 0) {
+
+            document.getElementById("aiReport").innerHTML =
+            "No match data found.";
+
+            return;
+
+        }
+
+        let totalRuns = 0;
+        let totalWickets = 0;
+        let totalOvers = 0;
+        let totalBatting = 0;
+
+        matches.forEach(match => {
+
+            totalRuns += match.runs;
+            totalWickets += match.wickets;
+            totalOvers += match.overs;
+            totalBatting += match.batting;
+
+        });
+
+        let economy = (totalRuns / totalOvers).toFixed(2);
+
+        let bowlingAnalysis = "";
+        let consistency = "";
+        let recommendation = "";
+
+        if(economy <= 5) {
+
+            bowlingAnalysis =
+            "Elite bowling control detected.";
+
+        }
+
+        else if(economy <= 7) {
+
+            bowlingAnalysis =
+            "Competitive bowling rhythm identified.";
+
+        }
+
+        else {
+
+            bowlingAnalysis =
+            "High run leakage detected under pressure.";
+
+        }
+
+        if(totalWickets >= matches.length) {
+
+            consistency =
+            "Wicket-taking consistency improving positively.";
+
+        }
+
+        else {
+
+            consistency =
+            "AI recommends improving attacking line and yorker execution.";
+
+        }
+
+        if(totalRuns > 150) {
+
+            recommendation =
+            "Focus on death bowling discipline and slower-ball variation.";
+
+        }
+
+        else {
+
+            recommendation =
+            "Continue aggressive attacking bowling strategy.";
+
+        }
+
+        let report = `
+
+🏏 KAUSHIK AI PERFORMANCE REPORT
+
+MATCHES ANALYZED: ${matches.length}
+
+TOTAL WICKETS: ${totalWickets}
+
+TOTAL RUNS CONCEDED: ${totalRuns}
+
+OVERALL ECONOMY: ${economy}
+
+TOTAL BATTING RUNS: ${totalBatting}
+
+--------------------------------------
+
+BOWLING ANALYSIS:
+${bowlingAnalysis}
+
+--------------------------------------
+
+CONSISTENCY ANALYSIS:
+${consistency}
+
+--------------------------------------
+
+NEXT MATCH RECOMMENDATIONS:
+
+• Bowl tighter first spell
+• Maintain aggressive body language
+• Attack stumps consistently
+• Improve slower ball execution
+• Use short ball strategically
+• Focus on yorker accuracy
+
+--------------------------------------
+
+LONG TERM AI VERDICT:
+
+Athlete profile shows strong comeback mentality
+with high future development potential if
+consistency improves.
+
+        `;
+
+        document.getElementById("aiReport").innerHTML = report;
+
+    }
+
+    displayMatches();
+
+</script>
+
+</body>
+
+</html>
