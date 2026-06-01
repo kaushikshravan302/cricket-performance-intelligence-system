@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FlashForward App</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0f172a;
+      color: white;
+    }
+    .card {
+      background: #7c3aed;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+    input {
+      margin: 5px;
+      padding: 8px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      background: #22c55e;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📚 FlashForward</h1>
+
+<input id="question" placeholder="Enter Question"><br>
+<input id="answer" placeholder="Enter Answer"><br>
+<button onclick="addCard()">Add Card</button>
+
+<div class="card">
+  <h2 id="q">No cards yet</h2>
+  <p id="a"></p>
+  <button onclick="showAnswer()">Show Answer</button>
+  <button onclick="nextCard()">Next</button>
+</div>
+
+<script>
+let cards = [];
+let current = 0;
+
+function addCard() {
+  let q = document.getElementById("question").value;
+  let a = document.getElementById("answer").value;
+
+  if(q && a){
+    cards.push({q,a});
+    document.getElementById("question").value = "";
+    document.getElementById("answer").value = "";
+    alert("Card Added!");
+    display();
+  }
+}
+
+function display(){
+  if(cards.length > 0){
+    document.getElementById("q").innerText = cards[current].q;
+    document.getElementById("a").innerText = "";
+  }
+}
+
+function showAnswer(){
+  document.getElementById("a").innerText = cards[current].a;
+}
+
+function nextCard(){
+  current = (current + 1) % cards.length;
+  display();
+}
+</script>
+
+</body>
+</html>
